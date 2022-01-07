@@ -11,6 +11,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -26,7 +30,7 @@ public class DecksControllerIntegrationTests {
     @Autowired
     private DecksRepository decksRepository;
 
-    private String[] Decklist = {
+    private String[] decklist = {
             "Ornithopter","Ornithopter","Ornithopter","Ornithopter",
             "Burrenton Forge-Tender","Burrenton Forge-Tender","Burrenton Forge-Tender",
             "Esper Sentinel","Esper Sentinel","Esper Sentinel",
@@ -59,10 +63,10 @@ public class DecksControllerIntegrationTests {
             "Thieving Skydiver","Thieving Skydiver"
     };
 
-    private Decks deck1 = new Decks("Goblins", "Brent", Decklist, "R");
-    private Decks deck2 = new Decks("Goblins", "Raphael", Decklist, "UW");
-    private Decks deck3 = new Decks("Hammertime", "Raphael", Decklist, "UW");
-    private Decks decktobedeleted = new Decks("Hammertime", "Hans", Decklist, "UW");
+    private Decks deck1 = new Decks("Goblins", "Brent", decklist, "R");
+    private Decks deck2 = new Decks("Goblins", "Raphael", decklist, "UW");
+    private Decks deck3 = new Decks("Hammertime", "Raphael", decklist, "UW");
+    private Decks decktobedeleted = new Decks("Hammertime", "Hans", decklist, "UW");
 
     @BeforeEach
     public void beforeAllTests() {
@@ -89,5 +93,52 @@ public class DecksControllerIntegrationTests {
                 .andExpect(jsonPath("$.name", is("Goblins")))
                 .andExpect(jsonPath("$.author", is("Brent")))
                 .andExpect(jsonPath("$.colors", is("R")));
+    }
+
+    @Test
+    public void givenDecks_whenGetDecksByName_thenReturnJsonDecks() throws Exception {
+
+        List<Decks> decksList = new ArrayList<>();
+        decksList.add(deck1);
+        decksList.add(deck1);
+
+        mockMvc.perform(get("/decks/{name}", "Goblins"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].author", is("Brent")))
+                .andExpect(jsonPath("$[0].name", is("Goblins")))
+                .andExpect(jsonPath("$[0].colors", is("R")))
+                .andExpect(jsonPath("$[1].author", is("Raphael")))
+                .andExpect(jsonPath("$[1].name", is("Goblins")))
+                .andExpect(jsonPath("$[1].colors", is("UW")));
+    }
+    
+    @Test
+    public void whenPostDecks_thenReturnJsonDecks() throws Exception {
+        Decks deck4 = new Decks("Control", "Victor", decklist, "UB");
+        
+        mockMvc.perform(post("/decks")
+                .content(mapper.writeValueAsString(deck4))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("Control")))
+                .andExpect(jsonPath("$.author", is("Victor")))
+                .andExpect(jsonPath("$.colors", is("UB")));
+    }
+
+    @Test
+    public void givenDecks_whenDeleteDecks_thenStatusOK() throws Exception {
+        mockMvc.perform(delete("/decks/author/{author}/{name}", "Hans", "Hammertime")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void givenNoDecks_whenDeleteDecks_thenStatusNotFound() throws Exception {
+        mockMvc.perform(delete("/decks/author/{author}/{name}", "Michiel", "Aggro")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }
