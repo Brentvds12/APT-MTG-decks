@@ -10,10 +10,23 @@ import javax.annotation.PostConstruct;
 import javax.websocket.server.PathParam;
 import java.util.List;
 
+@RestController
 public class DecksController {
 
     @Autowired
     private DecksRepository decksRepository;
+
+    @PostConstruct
+    public void fillDB(){
+        System.out.println("werkt dit?");
+        if(decksRepository.count()==0){
+            decksRepository.save(new Decks("Brent", "Goblins"));
+            decksRepository.save(new Decks("Raphael", "Goblins"));
+            decksRepository.save(new Decks("Raphael", "Control"));
+        }
+
+        System.out.println("Decks test: " + decksRepository.findAll().size());
+    }
 
     @GetMapping("/decks/cards/{cardName}")
     public List<Decks> getDecksByCardName(@PathVariable String cardName){
@@ -34,6 +47,9 @@ public class DecksController {
     public List<Decks> getDecksByName(@PathVariable String name){
         return decksRepository.findDecksByName(name);
     }
+
+    @GetMapping("/decks")
+    public List<Decks> getDecks(){ return decksRepository.findAll(); }
 
     @GetMapping("/decks/authors/{author}/{name}")
     public Decks getDecksByAuthorAndName(@PathVariable String author, @PathVariable String name){
@@ -69,16 +85,5 @@ public class DecksController {
         else{
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @PostConstruct
-    public void fillDB(){
-        if(decksRepository.count()==0){
-            decksRepository.save(new Decks("Brent", "Goblins"));
-            decksRepository.save(new Decks("Raphael", "Goblins"));
-            decksRepository.save(new Decks("Raphael", "Control"));
-        }
-
-        System.out.println("Decks test: " + decksRepository.findDecksByName("Goblins").size());
     }
 }
