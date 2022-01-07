@@ -7,7 +7,7 @@ public class Decks {
 
     @Id
     private String id;
-    private String cards[];
+    private String[] cards;
     private String colors;
     private String name;
     private String author;
@@ -52,8 +52,10 @@ public class Decks {
         this.author = author;
     }
 
-    public Decks(String name, String author) {
+    public Decks(String name, String author, String[] cards, String colors) {
         this.name = name;
         this.author = author;
+        this.cards = cards;
+        this.colors = colors;
     }
 }

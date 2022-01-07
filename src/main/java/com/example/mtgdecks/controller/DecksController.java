@@ -16,13 +16,45 @@ public class DecksController {
     @Autowired
     private DecksRepository decksRepository;
 
+    private String[] Decklist =
+            {"Ornithopter","Ornithopter","Ornithopter","Ornithopter",
+                    "Burrenton Forge-Tender","Burrenton Forge-Tender","Burrenton Forge-Tender",
+                    "Esper Sentinel","Esper Sentinel","Esper Sentinel",
+                    "Puresteel Paladin","Puresteel Paladin","Puresteel Paladin","Puresteel Paladin",
+                    "Sanctifier en-Vec","Sanctifier en-Vec",
+                    "Stoneforge Mystic","Stoneforge Mystic","Stoneforge Mystic","Stoneforge Mystic",
+                    "Steelshaper's Gift",
+                    "Colossus Hammer","Colossus Hammer","Colossus Hammer","Colossus Hammer",
+                    "Shadowspear",
+                    "Springleaf Drum","Springleaf Drum",
+                    "Cranial Plating",
+                    "Nettlecyst",
+                    "Sword of Fire and Ice",
+                    "Kaldra Compleat",
+                    "Sigarda's Aid","Sigarda's Aid","Sigarda's Aid","Sigarda's Aid",
+                    "Flooded Strand","Flooded Strand",
+                    "Hallowed Fountain","Hallowed Fountain",
+                    "Inkmoth Nexus","Inkmoth Nexus","Inkmoth Nexus",
+                    "Seachrome Coast","Seachrome Coast","Seachrome Coast","Seachrome Coast",
+                    "Snow-Covered Plains","Snow-Covered Plains","Snow-Covered Plains","Snow-Covered Plains",
+                    "Urza's Saga","Urza's Saga","Urza's Saga","Urza's Saga",
+                    "Windswept Heath","Windswept Heath","Windswept Heath","Windswept Heath",
+                    "Blacksmith's Skill","Blacksmith's Skill",
+                    "Burrenton Forge-Tender",
+                    "Pithing Needle",
+                    "Cathar Commando","Cathar Commando",
+                    "Mana Leak","Mana Leak","Mana Leak","Mana Leak",
+                    "Manriki-Gusari",
+                    "Sanctifier en-Vec","Sanctifier en-Vec",
+                    "Thieving Skydiver","Thieving Skydiver"};
+
     @PostConstruct
     public void fillDB(){
         System.out.println("werkt dit?");
         if(decksRepository.count()==0){
-            decksRepository.save(new Decks("Brent", "Goblins"));
-            decksRepository.save(new Decks("Raphael", "Goblins"));
-            decksRepository.save(new Decks("Raphael", "Control"));
+            decksRepository.save(new Decks("Goblins", "Brent", Decklist, "UW"));
+            decksRepository.save(new Decks("Goblins", "Raphael", Decklist, "R"));
+            decksRepository.save(new Decks("Hammertime", "Raphael", Decklist, "BW"));
         }
 
         System.out.println("Decks test: " + decksRepository.findAll().size());
