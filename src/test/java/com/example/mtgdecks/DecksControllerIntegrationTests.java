@@ -88,7 +88,6 @@ public class DecksControllerIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Goblins")))
                 .andExpect(jsonPath("$.author", is("Brent")))
-                .andExpect(jsonPath("$.colors", is("R")))
-                .andExpect(jsonPath("$.cards", is(Decklist)));
+                .andExpect(jsonPath("$.colors", is("R")));
     }
 }
