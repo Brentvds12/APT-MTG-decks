@@ -101,6 +101,7 @@ public class DecksController {
 
         retrievedDeck.setName(updatedDeck.getName());
         retrievedDeck.setCards(updatedDeck.getCards());
+        retrievedDeck.setColors(updatedDeck.getColors());
 
         decksRepository.save(retrievedDeck);
 

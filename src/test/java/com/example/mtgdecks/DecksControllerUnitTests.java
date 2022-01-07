@@ -73,7 +73,7 @@ public class DecksControllerUnitTests {
 
         List<Decks> decksList = new ArrayList<>();
         decksList.add(deck1);
-        decksList.add(deck1);
+        decksList.add(deck2);
 
         given(decksRepository.findDecksByName("Goblins")).willReturn(decksList);
 
@@ -109,15 +109,15 @@ public class DecksControllerUnitTests {
 
         given(decksRepository.findDecksByAuthorAndAndName("Brent", "Goblins")).willReturn(deck1);
 
-        Decks updatedDeck = new Decks("Control", "Brent", cardlist, "UB");
+        Decks updatedDeck = new Decks("Goblins", "Brent", cardlist, "UB");
 
         mockMvc.perform(put("/decks")
                 .content(mapper.writeValueAsString(updatedDeck))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("Control")))
-                .andExpect(jsonPath("$.author", is("brent")))
+                .andExpect(jsonPath("$.name", is("Goblins")))
+                .andExpect(jsonPath("$.author", is("Brent")))
                 .andExpect(jsonPath("$.colors", is("UB")));
     }
 
@@ -125,7 +125,7 @@ public class DecksControllerUnitTests {
     public void givenDecks_whenDeleteDecks_thenStatusOK() throws Exception {
         Decks decktobedeleted = new Decks("Hammertime", "Hans", cardlist, "UW");
 
-        given(decksRepository.findDecksByAuthorAndAndName("Hans", "Hammertime"));
+        given(decksRepository.findDecksByAuthorAndAndName("Hans", "Hammertime")).willReturn(decktobedeleted);
 
         mockMvc.perform(delete("/decks/author/{author}/{name}", "Hans", "Hammertime")
                 .contentType(MediaType.APPLICATION_JSON))
